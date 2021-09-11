@@ -38,6 +38,9 @@ setup.py install
 git clone https://github.com/tijldeneut/pyBusPirateLite && cd pyBusPirateLite && sudo setup.py install && cd .. && sudo rm -rf
 ```
 
+## Extra requirements
+* The actual Bus Pirate device. In case of Windows, find drivers here: https://ftdichip.com/drivers/vcp-drivers/
+
 Examples
 --------
 
