@@ -35,7 +35,7 @@ python3 setup.py install
 
 ### Oneliner
 ```
-git clone https://github.com/tijldeneut/pyBusPirateLite && cd pyBusPirateLite && sudo python3 setup.py install && cd .. && sudo rm -rf
+git clone https://github.com/tijldeneut/pyBusPirateLite && cd pyBusPirateLite && sudo python3 setup.py install && cd .. && sudo rm -rf pyBusPirateLite
 ```
 
 ## Extra requirements
