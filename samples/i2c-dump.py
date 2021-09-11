@@ -12,7 +12,7 @@ https://github.com/tijldeneut/pyBusPirateLite and run `setup.py install`
 Quick reset of the BusPirate: 
 python -c "from pyBusPirateLite.I2C import I2C; i2c = I2C('COM5',115200);i2c.hw_reset();"
 ## 'COM5' and 115200 are optional (defaults are to detect port and default rate 115200)
-python3 -c "from pyBusPirateLite.I2C import I2C; i2c = I2C();i2c.hw_reset();"
+sudo python3 -c "from pyBusPirateLite.I2C import I2C; i2c = I2C();i2c.hw_reset();"
 """
 import sys, argparse
 from pyBusPirateLite.I2C import *
