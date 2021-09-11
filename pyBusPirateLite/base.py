@@ -308,7 +308,6 @@ class BusPirate:
     
     def send_start_bit(self):
         self.write(0x02)
-        self.response(1, True)
         if self.response(1, binary=True) == b'\x01':
             self.recurse_end()
             return 1
