@@ -38,7 +38,7 @@ class SPI(BusPirate):
     CFG_SAMPLE = 0x01
     CFG_CLK_EDGE = 0x02
     CFG_IDLE = 0x04
-    CFG_PUSH_PULL = 0x08
+    CFG_OUT_TYPE = 0x08
 
     PIN_CS = 1
     PIN_AUX = 2
