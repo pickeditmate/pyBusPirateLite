@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     i2c = I2C(portname = args.device, speed = args.speed)
     
-    print('[!] Entering bitbang mode'),
+    print('[!] Entering bitbang mode')
     if i2c.enter_bb(): print('[+] OK')
     else: sys.exit('[-] Failed')
 
