@@ -5,7 +5,7 @@
 pyBusPirateLite
 ===============
 
-Python library for BusPirate based on code from Garrett Berg.
+Python 3 library for BusPirate based on code from Garrett Berg.
 It tries to be more Pythonic than the original code.
 
 This library allows using the following modes:
@@ -22,7 +22,21 @@ For more information about the BusPirate see http://dangerousprototypes.com/docs
 Based on code from Garrett Berg <cloudform511@gmail.com>
 (http://dangerousprototypes.com/2011/03/14/new-version-of-pybuspiratelite-python-library/)
 
-**Note**: Python 3.6 is required, mainly due to the use of `f`-strings.
+**Note**: Works on Windows and Linux
+
+Installation
+------------
+### Steps
+```
+git clone https://github.com/tijldeneut/pyBusPirateLite
+cd pyBusPirateLite
+setup.py install
+```
+
+### Oneliner
+```
+git clone https://github.com/tijldeneut/pyBusPirateLite && cd pyBusPirateLite && sudo setup.py install && cd .. && sudo rm -rf
+```
 
 Examples
 --------
@@ -61,6 +75,12 @@ i2c.speed = '400kHz'
 i2c.configure(power=True)
 i2c.write_then_read(2,0, [0xec, 0xf6])  # set write register
 i2c.write_then_read(1,1,[ 0xed])        # read from register
+```
+#### Or use the custom script to create chip dump:
+```
+wget https://github.com/tijldeneut/pyBusPirateLite/raw/master/samples/i2c-dump.py
+chmod +x i2c-dump.py
+i2c-dump.py -s 1024 -o chipdump.bin
 ```
 
 ### Detect port
