@@ -12,14 +12,14 @@ https://github.com/tijldeneut/pyBusPirateLite and run `setup.py install`
 Quick reset of the BusPirate: 
 python -c "from pyBusPirateLite.I2C import I2C; i2c = I2C('COM5',115200);i2c.hw_reset();"
 ## 'COM5' and 115200 are optional (defaults are to detect port and default rate 115200)
-sudo python3 -c "from pyBusPirateLite.I2C import I2C; i2c = I2C();i2c.hw_reset();"
 """
 import sys, argparse
 from pyBusPirateLite.I2C import *
 
-def i2c_write_data(data):
+def i2c_write_data(lstData):
     i2c.send_start_bit()
-    i2c.bulk_trans(len(data),data)
+    i2c.transfer(lstData)
+    i2c.ack()
     i2c.send_stop_bit()
 
 def i2c_read_bytes(address, numbytes, ret = False):
@@ -38,18 +38,19 @@ def i2c_read_bytes(address, numbytes, ret = False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(sys.argv[0])
-    parser.add_argument('-o', '--output', metavar='OUTFILE', type=argparse.FileType('wb'), required=True, help='Required: Output file')
-    parser.add_argument('-s', '--size', type=int, required=True, help='Required: total size')
+    parser.add_argument('-s', '--size', type=int, required=True, help='Required: total chip size in bytes')
+    parser.add_argument('-o', '--output', metavar='OUTFILE', type=argparse.FileType('wb'), help='Output file')
     parser.add_argument('-d', '--device', default='', help='Default is to detect the serial port')
-    parser.add_argument('-S', '--serial-speed', dest='speed', default=115200, type=int, help='Default is 115200bps')
     parser.add_argument('-b', '--block-size', dest='bsize', default=256, type=int, help='Default is 256bytes')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Print data to stdout')
 
     if len(sys.argv)<2: 
         parser.print_usage()
         sys.exit()
     args = parser.parse_args(sys.argv[1:])
-
-    i2c = I2C(portname = args.device, speed = args.speed)
+    
+    # Every Bus Pirate uses the same baudrate
+    i2c = I2C(portname = args.device, speed = 115200)
     
     print('[!] Entering bitbang mode')
     if i2c.enter_bb(): print('[+] OK')
@@ -72,14 +73,18 @@ if __name__ == '__main__':
     for iBlock in range(0, args.size, args.bsize):
         print('[!] Reading block {}'.format((int(iBlock / args.bsize))))
         # Reset the address with the correct block offset
+        if args.verbose: print('[i] Writing [{}, {}]'.format(hex(0xA0 + (int(iBlock / args.bsize) << 1)),'0'))
         i2c_write_data([0xA0 + (int(iBlock / args.bsize) << 1), 0])
+        if args.verbose: print('[i] Reading address {}, size {} bytes'.format(hex(0xA1 + (int(iBlock / args.bsize) << 1)),str(args.bsize)))
         lstData = i2c_read_bytes([0xA1 + (int(iBlock / args.bsize) << 1)], args.bsize, True)
         bData = b''.join(lstData)
-        args.output.write(bData)
+        if not args.output: print(bData)
+        else: args.output.write(bData)
     if args.size % 16 != 0:
         end = 16 * int(args.size / args.bsize)
-        args.output.write(b''.join([chr(x) for x in i2c_read_bytes([0xA1 + (int(args.size / args.bsize) << 1)], args.size % args.bsize, True)]))
-    args.output.close()
+        if not args.output: print(bData)
+        else: args.output.write(b''.join([chr(x) for x in i2c_read_bytes([0xA1 + (int(args.size / args.bsize) << 1)], args.size % args.bsize, True)]))
+    if args.output: args.output.close()
 
     print('[!] Reset Bus Pirate to user terminal')
     try: 
